@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://dabestonlol:mpngodb@almacen.1zegl.mongodb.net/almacen')
+mongoose.connect('mongodb+srv://user:passwd@almacen.1zegl.mongodb.net/almacen')
   .then(() => console.log('Connected!'));
 
 //definir esquema del documento
