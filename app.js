@@ -1,77 +1,68 @@
-const express = require("express");
-const app = express();
-const port = 3000;
+const mongoose = require('mongoose');
 
+mongoose.connect('mongodb+srv://dabestonlol:mpngodb@almacen.1zegl.mongodb.net/almacen')
+  .then(() => console.log('Connected!'));
 
-// Middleware para parsear el cuerpo de las solicitudes en formato JSON
-app.use(express.json());
-
-
-// Datos de ejemplo (simulando una base de datos)
-let items = [
-  { id: 1, name: "Item 1" },
-  { id: 2, name: "Item 2" },
-  { id: 3, name: "Item 3" },
-];
-
-
-// Obtener todos los ítems
-app.get("/items", (req, res) => {
-  res.json(items);
+//definir esquema del documento
+const ordenadorSchema = new mongoose.Schema({
+marca:String,
+precio:Number
 });
 
+//creamos el modelo
+const Ordenador = mongoose.model("ordenadore",ordenadorSchema,"ordenadores");
+//buscamos el primer registro 
+const buscaPrimero = ()=>{
+    Ordenador.findOne()
+    .then(ordenador=>{
+        if(ordenador){
+            console.log("Primer ordenador encontrado: ",ordenador);
+        }else{
+            console.log("No hemos encontrado ordenador");
+        }
+    })
+    .catch(err=>error("Error al obtener el ordenador; ",err));
+}
+const buscaTodos = ()=>{
+    Ordenador.find()
+    .then(ordenadores=>{
+        if(ordenadores.length>0){
+            console.log("Ordenadores encontrados: ",ordenadores);
+        }else{
+            console.log("No hemos encontrado ordenadores");
+        }
+    })
+    .catch(err=>error("Error al obtener el ordenadores; ",err));
+}
+const buscaId = (id)=>{
+    Ordenador.findById(id)
+    .then(ordenador=>{
+        if(ordenador){
+            console.log("Ordenador encontrado: ",ordenador);
+        }else{
+            console.log("No hemos encontrado ordenador");
+        }
+    })
+    .catch(err=>error("Error al obtener el ordenador; ",err));
+}
+//buscaTodos();
 
-// Obtener un ítem por ID
-app.get("/items/:id", (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const item = items.find((i) => i.id === itemId);
-  if (item) {
-    res.json(item);
-  } else {
-    res.status(404).json({ message: "Ítem no encontrado" });
-  }
-});
+const idBuscado="6798f7a97d38fd52c9a3cbeb";
 
+//buscaId(idBuscado);
 
-// Crear un nuevo ítem
-app.post("/items", (req, res) => {
-  const newItem = {
-    id: items.length + 1,
-    name: req.body.name,
-  };
-  items.push(newItem);
-  res.status(201).json(newItem);
-});
+//Buscar por precios preciosos
 
+const buscaPrecioMayor = ()=>{
+    Ordenador.find({precio:{$gt:150}})
+    .then(ordenador=>{
+        if(ordenador){
+            console.log("ordenadores con preico mayor que 150: ",ordenador);
+        }else{
+            console.log("No hemos encontrado ordenador");
+        }
+    })
+    .catch(err=>error("Error al obtener el ordenador; ",err));
+}
 
-// Actualizar un ítem existente
-app.put("/items/:id", (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const itemIndex = items.findIndex((i) => i.id === itemId);
-  if (itemIndex !== -1) {
-    items[itemIndex].name = req.body.name;
-    res.json(items[itemIndex]);
-  } else {
-    res.status(404).json({ message: "Ítem no encontrado" });
-  }
-});
-
-
-// Eliminar un ítem
-app.delete("/items/:id", (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const itemIndex = items.findIndex((i) => i.id === itemId);
-  if (itemIndex !== -1) {
-    const deletedItem = items.splice(itemIndex, 1);
-    res.json(deletedItem);
-  } else {
-    res.status(404).json({ message: "Ítem no encontrado" });
-  }
-});
-
-
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
-});
-
+buscaPrecioMayor();
