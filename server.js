@@ -2,14 +2,12 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-
 // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
-
-
+const moduloOrdenador = require("./models/ordenador");
 // Datos de ejemplo (simulando una base de datos)
 let items = [
-  { id: 1, name: "Item 1" },
+  { id: 1, name: "Ordenador 1" },
   { id: 2, name: "Item 2" },
   { id: 3, name: "Item 3" },
 ];
@@ -17,7 +15,9 @@ let items = [
 
 // Obtener todos los ítems
 app.get("/items", (req, res) => {
-  res.json(items);
+    moduloOrdenador.buscaTodos();
+    
+    res.json(items);
 });
 
 
@@ -74,4 +74,3 @@ app.delete("/items/:id", (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
-
